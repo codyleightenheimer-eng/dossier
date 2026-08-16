@@ -1,0 +1,1037 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+  * { box-sizing: border-box; }
+  .beacon-app {
+    font-family: 'Inter', sans-serif;
+    color: #ece6d6;
+    background: #171b23;
+    border-radius: 14px;
+    overflow: hidden;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .serif { font-family: 'Fraunces', serif; }
+  .beacon-app input, .beacon-app textarea {
+    background: #20242e; border: 1px solid #363c49; color: #ece6d6;
+    border-radius: 6px; padding: 6px 8px; font-family: inherit; font-size: 13px;
+  }
+  .beacon-app input:focus, .beacon-app textarea:focus { outline: 1px solid #c9a227; }
+  .beacon-app input[type="number"] { padding-right: 2px; text-align: left; }
+  .beacon-app button {
+    background: #262b36; border: 1px solid #3a4150; color: #ece6d6;
+    border-radius: 6px; padding: 6px 10px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif;
+  }
+  .beacon-app button:hover { background: #2f3644; }
+  .beacon-app button.primary { background: #c9a227; color: #171b23; border-color: #c9a227; font-weight: 600; }
+  .beacon-app button.primary:hover { background: #d9b23a; }
+  .tab-btn.active { background: #c9a227; color: #171b23; border-color: #c9a227; font-weight: 600; }
+</style>
+
+<div class="beacon-app" role="region" aria-label="Cork Academy student tracker for Beacon">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Cork Academy digital character tracker for Jayden Jameson, codename Beacon</h2>
+
+  <div style="background:#0f1219; padding:20px 24px; border-bottom:2px solid #c9a227; display:flex; justify-content:space-between; align-items:flex-end;">
+    <div>
+      <div class="mono" style="font-size:11px; letter-spacing:2px; color:#c9a227;">CORK ACADEMY &middot; STUDENT DOSSIER</div>
+      <div class="serif" style="font-size:28px; font-weight:600; margin-top:4px;">Beacon</div>
+      <div style="font-size:13px; color:#9a9587;">Jayden Jonah Jameson &middot; Freshman &middot; Mutant</div>
+    </div>
+    <div style="text-align:right;">
+      <div id="ssBadge" style="font-size:12px; padding:4px 10px; border-radius:20px; background:#2f6f6a; color:#d3ece8; font-weight:600;">Cool Kid</div>
+      <div class="mono" style="font-size:11px; color:#9a9587; margin-top:6px;">ID #918-BC</div>
+    </div>
+  </div>
+
+  <div style="display:flex; gap:6px; padding:12px 24px 0; flex-wrap:wrap; border-bottom:1px solid #262b36;">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="powers">Powers</button>
+    <button class="tab-btn" data-tab="social">Social</button>
+    <button class="tab-btn" data-tab="drama">Drama pool</button>
+    <button class="tab-btn" data-tab="background">Background</button>
+    <button class="tab-btn" data-tab="contacts">Contacts</button>
+    <button class="tab-btn" data-tab="equipment">Equipment</button>
+    <button class="tab-btn" data-tab="sessions">Sessions</button>
+    <button class="tab-btn" data-tab="threads">Threads</button>
+    <button class="tab-btn" data-tab="scenes">Scenes</button>
+    <button class="tab-btn" data-tab="class">Class</button>
+    <button class="tab-btn" data-tab="calendar">Calendar</button>
+    <button class="tab-btn" data-tab="feat">Feat table</button>
+  </div>
+
+  <div style="padding:20px 24px;">
+
+    <div id="tab-overview" class="tab-panel">
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:18px;">
+        <div style="background:#20242e; border-radius:8px; padding:10px;">
+          <div style="font-size:11px; color:#9a9587;">Health</div>
+          <div class="mono"><input type="number" id="healthCur" style="width:68px;"> / <span id="healthMax" class="mono"></span></div>
+        </div>
+        <div style="background:#20242e; border-radius:8px; padding:10px;">
+          <div style="font-size:11px; color:#9a9587;">Karma</div>
+          <input type="number" id="karma" style="width:80px;">
+        </div>
+        <div style="background:#20242e; border-radius:8px; padding:10px;">
+          <div style="font-size:11px; color:#9a9587;">GPA</div>
+          <input type="number" step="0.1" id="gpa" style="width:72px;"> /4.0
+        </div>
+        <div style="background:#20242e; border-radius:8px; padding:10px;">
+          <div style="font-size:11px; color:#9a9587;">Social standing</div>
+          <input type="number" id="ss" style="width:68px;"> /100
+        </div>
+      </div>
+
+      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+        <thead>
+          <tr style="text-align:left; color:#9a9587; font-size:11px;">
+            <th style="padding:4px 0;">Stat</th><th>Base</th><th>Current</th>
+          </tr>
+        </thead>
+        <tbody id="statBody"></tbody>
+      </table>
+
+      <div style="margin-top:14px; font-size:12px; color:#9a9587;">
+        Resources <b class="mono" id="resourcesShow" style="color:#ece6d6;"></b> &middot;
+        Popularity <input type="number" id="popularity" style="width:65px;">
+      </div>
+
+      <div style="margin-top:18px; border-top:1px solid #262b36; padding-top:12px;">
+        <div style="font-size:12px; color:#9a9587; margin-bottom:8px;">Attacks</div>
+        <div id="attacksTable"></div>
+        <button id="addAttackRow" style="margin-top:6px;">Add attack</button>
+
+        <div style="margin-top:16px; display:flex; gap:20px; align-items:center;">
+          <div style="font-size:13px;">Force Field defense: <input id="defFF" style="width:90px;"></div>
+          <div style="font-size:13px;">Armor defense: <input id="defArmor" style="width:90px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-powers" class="tab-panel" style="display:none;">
+      <div id="powersList"></div>
+      <div style="margin-top:14px; font-size:12px; color:#9a9587;">
+        Power Control: use at/below Control needs no roll. Above Control requires an Intensity FEAT (Control rank vs power output). A Red result always succeeds.
+      </div>
+      <div style="margin-top:16px; border-top:1px solid #262b36; padding-top:12px;">
+        <div style="font-size:12px; color:#9a9587; margin-bottom:6px;">Stunts / notes</div>
+        <textarea id="stuntNotes" rows="3" style="width:100%;" placeholder="Light Blast, Molecular Creation stunt, Magnifying Blast..."></textarea>
+      </div>
+    </div>
+
+    <div id="tab-social" class="tab-panel" style="display:none;">
+      <div style="display:flex; gap:10px; margin-bottom:14px; align-items:center;">
+        <div style="font-size:12px; color:#9a9587;">Social Role</div>
+        <input id="socialRole" style="width:120px;">
+        <div style="font-size:12px; color:#9a9587;">Class</div>
+        <select id="socialClass">
+          <option>Cool Kid</option><option>Normie</option><option>Loser</option>
+        </select>
+      </div>
+      <div id="relList"></div>
+      <div style="margin-top:12px; font-size:11px; color:#9a9587;">
+        Friend slots: 2 base + 1 per 25 SS. Value starts at Personality rank. Unengaged slots lose 20pts or half value (whichever greater) at term end.
+      </div>
+      <div style="margin-top:10px;">
+        <button id="refreshRelationshipsTemplate">Refresh relationships from latest template</button>
+        <div style="margin-top:6px; font-size:11px; color:#9a9587;">
+          Overwrites ONLY names/ranks/notes for the relationship slots above with the tracker's built-in latest info (roles, power ranks, corrections). Other tabs are untouched. Any custom notes you've added yourself since the last refresh will be replaced — copy them out first if you want to keep them.
+        </div>
+      </div>
+
+      <div style="margin-top:16px; border-top:1px solid #262b36; padding-top:12px;">
+        <div style="font-size:12px; color:#9a9587; margin-bottom:8px;">Rumors</div>
+        <div id="rumorsList"></div>
+        <button id="addRumor" style="margin-top:6px;">Add rumor</button>
+      </div>
+
+      <div style="margin-top:16px; border-top:1px solid #262b36; padding-top:12px;">
+        <div style="font-size:12px; color:#9a9587; margin-bottom:6px;">Social standing log</div>
+        <div style="display:flex; gap:6px; margin-bottom:8px;">
+          <input id="ssEventLabel" placeholder="e.g. defeated a minor villain publicly" style="flex:1;">
+          <input id="ssEventValue" type="number" placeholder="+8" style="width:80px;">
+          <button id="addSsEvent">Log</button>
+        </div>
+        <div id="ssLog" class="mono" style="font-size:12px; color:#9a9587;"></div>
+      </div>
+
+      <div style="margin-top:16px; border-top:1px solid #262b36; padding-top:12px;">
+        <div style="font-size:12px; color:#9a9587; margin-bottom:6px;">Year-end reset</div>
+        <div style="font-size:11px; color:#9a9587; margin-bottom:8px; line-height:1.6;">
+          Halves current SS, then applies class modifier (Cool Kid +10, Normie +0, Loser -10). Result is floored at Personality rank. Grade/Role caps for the new year aren't auto-applied here — check those against the new grade before play.
+        </div>
+        <button id="yearEndReset">Run year-end reset</button>
+      </div>
+    </div>
+
+    <div id="tab-drama" class="tab-panel" style="display:none;">
+      <div style="display:flex; gap:20px; margin-bottom:14px;">
+        <div><div style="font-size:11px; color:#9a9587;">Drama Pool</div><input type="number" id="dramaPool" style="width:72px;"></div>
+        <div><div style="font-size:11px; color:#9a9587;">Drama Bank</div><input type="number" id="dramaBank" style="width:72px;"></div>
+        <div><div style="font-size:11px; color:#9a9587;">Earned this session</div><input type="number" id="dpSession" style="width:65px;"> /10</div>
+      </div>
+      <div id="dpChecklist"></div>
+      <div style="margin-top:12px; display:flex; gap:8px;">
+        <button id="convertDp">Convert pool to karma (&times;5)</button>
+      </div>
+      <div style="margin-top:14px; font-size:11px; color:#9a9587; line-height:1.6;">
+        In-session: 1 DP negate SS penalty / reroll FEAT / +1 PC &middot; 2 DP reroll social check &middot; 3 DP guarantee relationship help &middot; 5 DP auto-succeed PC feat.<br>
+        Year-end: 30 DP change Social Role &middot; 10 DP +5 SS (max +15/yr) &middot; 10 DP +0.1 GPA (max +1.0/yr) &middot; 1 DP +1 Power Control.
+      </div>
+    </div>
+
+    <div id="tab-background" class="tab-panel" style="display:none;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px; margin-bottom:14px;">
+        <div>Homeland: <input id="bgHomeland" style="width:100%;"></div>
+        <div>Age: <input id="bgAge" style="width:100%;"></div>
+        <div>Height: <input id="bgHeight" style="width:100%;"></div>
+        <div>Blood type: <input id="bgBlood" style="width:100%;"></div>
+        <div>Nationality: <input id="bgNat" style="width:100%;"></div>
+        <div>Origin: <input id="bgOrigin" style="width:100%;"></div>
+      </div>
+      <div style="font-size:12px; color:#9a9587; margin-bottom:4px;">Family</div>
+      <textarea id="family" rows="3" style="width:100%; margin-bottom:12px;"></textarea>
+      <div style="font-size:12px; color:#9a9587; margin-bottom:4px;">Talents</div>
+      <textarea id="talents" rows="2" style="width:100%; margin-bottom:12px;"></textarea>
+      <div style="font-size:12px; color:#9a9587; margin-bottom:4px;">Clubs</div>
+      <textarea id="clubs" rows="2" style="width:100%; margin-bottom:12px;"></textarea>
+    </div>
+
+    <div id="tab-contacts" class="tab-panel" style="display:none;">
+      <div style="font-size:12px; color:#9a9587; margin-bottom:8px;">Contacts</div>
+      <div id="contactsList"></div>
+      <button id="addContact" style="margin-top:6px;">Add contact</button>
+      <div style="margin-top:16px; border-top:1px solid #262b36; padding-top:12px;">
+        <button id="refreshContactsTemplate">Refresh contacts from latest template</button>
+        <div style="margin-top:6px; font-size:11px; color:#9a9587;">
+          Overwrites ONLY this Contacts tab with the tracker's built-in latest write-ups (Robbie, Cork Academy, JayJay Following). Everything else on the sheet — stats, powers, relationships, attacks, sessions, rumors — is untouched. Use this if your saved contacts look outdated.
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-equipment" class="tab-panel" style="display:none;">
+      <div style="font-size:12px; color:#9a9587; margin-bottom:4px;">Equipment</div>
+      <textarea id="equipment" rows="12" style="width:100%;" placeholder="One item per line..."></textarea>
+    </div>
+
+    <div id="tab-sessions" class="tab-panel" style="display:none;">
+      <div style="display:flex; gap:6px; margin-bottom:10px;">
+        <input id="sessionTitle" placeholder="Session title (e.g. Week 3 - Combat Training)" style="flex:1;">
+        <button id="addSession">New entry</button>
+      </div>
+      <div id="sessionsList"></div>
+    </div>
+
+    <div id="tab-threads" class="tab-panel" style="display:none;">
+      <div style="font-size:11px; color:#9a9587; margin-bottom:10px; line-height:1.5;">
+        Open story threads that haven't resolved yet - things to circle back to.
+      </div>
+      <div style="display:flex; gap:6px; margin-bottom:10px;">
+        <input id="threadTitle" placeholder="Thread title (e.g. Dmitri Vinkov connection)" style="flex:1;">
+        <button id="addThread">New thread</button>
+      </div>
+      <div id="threadsList"></div>
+    </div>
+
+    <div id="tab-scenes" class="tab-panel" style="display:none;">
+      <div style="display:flex; gap:6px; margin-bottom:10px;">
+        <input id="sceneTitle" placeholder="Scene title (e.g. The J. Jonah Jameson reveal)" style="flex:1;">
+        <button id="addScene">New scene</button>
+      </div>
+      <div id="scenesList"></div>
+    </div>
+
+    <div id="tab-class" class="tab-panel" style="display:none;">
+      <div style="font-size:11px; color:#9a9587; margin-bottom:10px; line-height:1.5;">
+        Freshman class, Fall 2022 intake. PCs are tagged; everyone else is an NPC classmate.
+      </div>
+      <div id="classList"></div>
+      <button id="addClassmate" style="margin-top:6px;">Add classmate</button>
+    </div>
+
+    <div id="tab-calendar" class="tab-panel" style="display:none;">
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px; color:#9a9587; margin-bottom:4px;">Current in-game date</div>
+        <input id="currentDate" style="width:100%;" placeholder="e.g. August 3 (Orientation)">
+      </div>
+      <div id="calendarList"></div>
+    </div>
+
+    <div id="tab-feat" class="tab-panel" style="display:none;">
+      <div style="display:flex; gap:10px; align-items:center; margin-bottom:14px;">
+        <div style="font-size:12px; color:#9a9587;">Rank</div>
+        <select id="featRank"></select>
+        <button id="rollFeat">Roll d100</button>
+      </div>
+      <div id="featResult" style="font-size:14px; margin-bottom:14px;"></div>
+      <table id="featTableDisplay" style="width:100%; font-size:12px; border-collapse:collapse;"></table>
+    </div>
+
+  </div>
+
+  <div style="padding:10px 24px 16px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #262b36;">
+    <span id="saveStatus" style="font-size:11px; color:#9a9587;"></span>
+    <div style="display:flex; gap:8px;">
+      <button id="importDataBtn">Import data (JSON)</button>
+      <input type="file" id="importFileInput" accept="application/json,.json" style="display:none;">
+      <button id="exportDataBtn">Export my data (JSON)</button>
+      <button class="primary" id="saveBtn">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const STORE_KEY = 'beacon-jameson-sheet';
+
+  const FEAT_TABLE = [
+    {rank:'Shift-0', num:0, white:[1,60], green:[61,90], yellow:[91,99], red:[100,100]},
+    {rank:'Feeble', num:2, white:[1,57], green:[58,87], yellow:[88,99], red:[100,100]},
+    {rank:'Poor', num:4, white:[1,54], green:[55,84], yellow:[85,98], red:[99,100]},
+    {rank:'Typical', num:5, white:[1,51], green:[52,81], yellow:[82,98], red:[99,100]},
+    {rank:'Good', num:10, white:[1,48], green:[49,78], yellow:[79,98], red:[99,100]},
+    {rank:'Excellent', num:20, white:[1,45], green:[46,75], yellow:[76,94], red:[95,100]},
+    {rank:'Remarkable', num:30, white:[1,39], green:[40,72], yellow:[73,94], red:[95,100]},
+    {rank:'Fantastic', num:35, white:[1,36], green:[37,69], yellow:[70,94], red:[95,100]},
+    {rank:'Incredible', num:40, white:[1,33], green:[34,66], yellow:[67,94], red:[95,100]},
+    {rank:'Uncanny', num:45, white:[1,30], green:[31,63], yellow:[64,90], red:[91,100]},
+    {rank:'Amazing', num:50, white:[1,27], green:[28,60], yellow:[61,90], red:[91,100]},
+    {rank:'Sensational', num:60, white:[1,24], green:[25,55], yellow:[56,90], red:[91,100]},
+    {rank:'Spectacular', num:70, white:[1,21], green:[22,52], yellow:[53,85], red:[86,100]},
+    {rank:'Monstrous', num:80, white:[1,18], green:[19,50], yellow:[51,85], red:[86,100]},
+    {rank:'Unearthly', num:100, white:[1,15], green:[16,47], yellow:[48,85], red:[86,100]},
+    {rank:'Shift 125', num:125, white:[1,13], green:[14,44], yellow:[45,80], red:[81,100]},
+    {rank:'Shift 150', num:150, white:[1,11], green:[12,41], yellow:[42,80], red:[81,100]},
+    {rank:'Shift 250', num:250, white:[1,9], green:[10,38], yellow:[39,80], red:[81,100]},
+    {rank:'Shift 500', num:500, white:[1,7], green:[8,35], yellow:[36,75], red:[76,100]}
+  ];
+
+  const defaultData = {
+    stats: [
+      {name:'Fighting', base:'Rm 30', current:'Ty 5'},
+      {name:'Agility', base:'Amz 50', current:'Fn 35'},
+      {name:'Strength', base:'Ex 20', current:'Pr 4'},
+      {name:'Endurance', base:'In 40', current:'Ex 20'},
+      {name:'Reason', base:'In 40', current:'In 40'},
+      {name:'Intuition', base:'Ex 20', current:'Ex 20'},
+      {name:'Psyche', base:'Ex 20', current:'Ty 5'},
+      {name:'Personality', base:'Rm 30', current:'Rm 30'}
+    ],
+    healthCur: 64, healthMax: 64, karma: 94, gpa: 4.0, ss: 50, resources: 'Good (10)', popularity: 0,
+    attacksList: [
+      {name:'Punch', power:'—', attack:'Typical (5)', damage:'Poor (4)', notes:''},
+      {name:'Coherent Blast (laser)', power:'Light Control', attack:'Fantastic (35)', damage:'Sensational (60)', notes:'Primary ranged attack'},
+      {name:'Blinding Burst', power:'Light Control', attack:'Fantastic (35)', damage:'No Health damage', notes:'Disables target\'s next action instead of dealing damage'},
+      {name:'Focused Beam (armor-piercing)', power:'Light Control', attack:'Fantastic (35)', damage:'Sensational (60), ignores partial Armor', notes:'Future development'},
+      {name:'Compound Projectile', power:'Molecular Creation', attack:'Fantastic (35)', damage:'Amazing (50)', notes:'Costs Health equal to ounces created'},
+      {name:'Corrosive Compound', power:'Molecular Creation', attack:'Fantastic (35)', damage:'Amazing (50) vs. Armor/gear only', notes:'Does not damage living targets directly'},
+      {name:'Explosive Compound', power:'Molecular Creation', attack:'Fantastic (35)', damage:'Amazing (50), delayed/area', notes:'Future development, needs GM sign-off'}
+    ],
+    defense: {ff:'', armor:''},
+    equipment: '',
+    powers: [
+      {name:'Molecular Creation', rank:'Amz 50', control:4},
+      {name:'Light Manipulation', rank:'Sn 60', control:10}
+    ],
+    stuntNotes: 'HOUSE RULE: GM rules 1 lb = 1 HP for Molecular Creation (not 1 oz = 1 HP as written). Applies to combat damage-creation too. Effectively a 16x multiplier on material-per-Health across the board — at Control Poor(4), creates 4 lbs/turn for 4 HP; daily cap is still tied to total Health, now in lbs (64 HP = 64 lbs/day).\n\nLIGHT CONTROL\nUtility: Signal Flare, Glow-Up, Screen Glare, Warm Light, Basketball Court Trick\nDamaging: Coherent Blast (laser), Blinding Burst, Focused Beam (armor-piercing, future), Flash-Step Cover\n\nMOLECULAR CREATION\nUtility: Fabricate Support Gear, Field Patch, Care Package, Emergency Barrier, Battery Pack\nDamaging: Compound Projectile, Corrosive Compound, Explosive Compound (future), Encasement\n\nCOMBINED\nLight-Reactive Compound, Broadcast Rig\n\nCurrent Control (Poor/4) means Coherent Blast + Compound Projectile are the two damaging stunts usable now without relying on a FEAT every time.',
+    socialRole: 'Caretaker', socialClass: 'Cool Kid',
+    relationships: [
+      {type:'Mentor', person:'Peter Parker', rank:30},
+      {type:'Rival', person:'Andrea Bruno (roommate)', rank:30},
+      {type:'Best Friend', person:'', rank:0},
+      {type:'Friend 1', person:'Giulia Moretti', rank:30, notes:'Jock / Cool Kid (corrected from Caretaker). Speech-Throwing Gd(10) (corrected from Ty/5). Complicated hook; secret is an unreported power side effect. Clubs: Rugby (Fall), Field Hockey (Winter).'},
+      {type:'Friend 2', person:'Emma Scott', rank:30},
+      {type:'Friend 3', person:'Olivia Hunt', rank:30, notes:'Codename Gumshoe. New Arrival / Cool Kid. Malleability Uc(45) (corrected from In/40). Irish. No hook/secret recorded on the roommate roll.'},
+      {type:'Friend 4', person:'Phineas Wake', rank:30, notes:'Codename Half-Life, played by Tris. Origin: Changeling - a true shapeshifter with four distinct forms (Human, Grotesque Mutant, Android, Surgical Composite), each with its own Health total and stat modifiers. Roommate: Ali Amrani. Clubs: Engineering, Home Economics. Also a Friend of Dmitri Vinkov\'s.'},
+      {type:'Tutor', person:'', rank:0},
+      {type:'Crush', person:'James Kelly', rank:0},
+      {type:'BF/GF', person:'', rank:0},
+      {type:'Clubmate', person:'Fatma Nasser', rank:30, notes:'Name corrected from "Fatima Nassar." Outcast-Pariah / Loser. Force Field Ex(20) (corrected from Gd/10). Ambitious, driven hook; secret is knowing something about a student/faculty member she hasn\'t shared. Clubs: Chess (Winter), Combat Training (All-Year), Superheroics Club (All-Year, though flagged as not yet eligible as a Freshman).'}
+    ],
+    ssLog: [],
+    dramaPool: 0, dramaBank: 0, dpSession: 2,
+    dpChecklist: [
+      {label:'Help someone with a problem before they ask', done:false},
+      {label:'Provide care to someone who is hurt', done:false},
+      {label:'Do something kind without being asked', done:true},
+      {label:'Look after someone who probably wouldn\'t look after themselves', done:false},
+      {label:'Absorb a social consequence for someone', done:true},
+      {label:'Be the last one to hear when things go bad', done:false},
+      {label:'Notice someone is struggling', done:false},
+      {label:'Set aside your own need to address someone else\'s', done:true},
+      {label:'Be thanked for something you did', done:false},
+      {label:'Do something for your PC or hit your character\'s need', done:false}
+    ],
+    bg: {homeland:'NYC', age:'14', height:'6\'4"', blood:'O-', nat:'American', origin:'Random Mutant'},
+    family: 'Father: John Jonah Jameson\nMother: Chelsea (sports reporter)\nGrandfather: J. Jonah Jameson (working relationship, conflicted about the mutant gene)',
+    talents: 'Student (halves Karma cost of Talent purchases, lost at graduation)\nBasketball',
+    contactsList: [
+      {name:'Joseph "Robbie" Robertson', description:'Editor-in-chief, Daily Bugle. J. Jonah Jameson\'s longtime editor, and has always acted as a surrogate father/grandfather to Jayden - showing up for him in a way his own family, busy and complicated, hasn\'t always managed.\n\nBenefit - Institutional media access: real adult-world press credibility and gatekeeper access. Can get something fact-checked, run, held, or quietly killed through actual journalism channels - moves adults, institutions, and public record, not just a peer following.\nBenefit - Grounded adult judgment: someone who tells Jayden the truth and helps him think things through rather than just handing over a resource. Coming to Robbie with a personal (not plot) problem should carry a reduced Karma cost or an automatic good-advice result.\n\nConfirmed connection: Robbie is one of the very few people ever trusted with Peter Parker\'s secret identity, in this continuity. That gives Jayden\'s Mentor (Peter) and this Contact a real, pre-existing link.'},
+      {name:'Cork Academy', description:'The school itself as a Contact - facilities, faculty, and institutional weight.\n\nBenefit - Facilities and expertise access: training facilities, labs, library/archives, and faculty expertise across nearly any subject or specialty a staff member covers. Good for research, safe practice space for an unmastered stunt, or a real opinion on mutant physiology/powers.\nBenefit - Safety net: the infirmary, faculty oversight, and the school\'s capacity to handle "a student got hurt/into trouble" quietly and competently - the contact to lean on when something\'s gone wrong on campus and needs fast, discreet handling.\n\nLimit: campus-bound. No help with NYC problems, family matters, or anything involving JayJay\'s public life.\nRisk: cuts both ways. Faculty are still faculty - leaning on this for something that reveals rule-breaking, reckless power use, or a secret he\'s keeping (the mutant/JayJay overlap) risks the school acting on what it learns rather than just helping.'},
+      {name:'JayJay Following', description:'A global following of people his own generation, built pre-Cork Academy under the brand name "JayJay." Everyone at Cork already knows him as JayJay (part of his social capital as a Cool Kid).\n\nBenefit - Crowdsourced intel: can tap the following to ask/notice things across a massive worldwide peer network - good for tracking a rumor\'s origin, finding out if something\'s already circulating, or locating a person/piece of youth-culture info fast.\nBenefit - Instant momentum: can make something trend specifically among his generation worldwide within hours - strong for peer-level pressure or making an issue impossible to quietly bury.\nLimit: wide but shallow and age-capped - no institutional access, no adult gatekeepers, no legal/political/financial leverage. Useless for anything requiring authority or reach into other age groups.\n\nRisk: public use risks SS fallout if it backfires. Any use that catches a Power in action risks the real secret (that JayJay is a mutant with real powers, not camera tricks) - the JayJay identity itself is already public knowledge at Cork.'}
+    ],
+    clubs: 'Combat Training',
+    sessions: [],
+    threads: [
+      {title:'James Kelly & Emma Scott enhancement gear project', notes:'Jayden and James are building enhancement gear for Emma, whose Vibration Emission (Gd/10) lags behind the rest of the friend group\'s power output.\n\nBase chassis: Jayden forms the physical housing using Molecular Creation - likely wearable (glove, pendant, headband) rather than handheld, so Emma can keep using it in the field.\nFunction: James contributes the radiowave-tuning side - a resonance amplifier that tunes and boosts Emma\'s own vibration output, giving her a temporary +1CS or letting her hit Power rank Intensity she can\'t reach solo yet.\nCost (under GM house rule, 1 lb = 1 HP): a wearable device weighing a few pounds costs Jayden only a few Health - sustainable to build/rebuild repeatedly.\nDurability: needs a Reason FEAT at creation to set lifespan (Green/Yellow/Red) - still undecided whether this is a disposable prototype or built to last.\nTalent gap: neither Jayden nor James has an Engineering/Physics Talent yet - worth deciding if one of them picks one up for this.\nBuilt-in limitation: Molecular Creation can\'t create anything requiring internal Powers (actual energy generation), so the device likely needs periodic re-tuning by James rather than being a standalone permanent gadget - a recurring reason for the two of them to keep working on it together.'},
+      {title:'Dmitri Vinkov connection', notes:'Dmitri lists Jayden as Friend 2 (Ex/20) on his own sheet - asymmetric, since Dmitri isn\'t in any of Jayden\'s four Friend slots (currently full: Giulia, Emma, Olivia Hunt, Phineas).\n\nDeliberately left open rather than forced into a slot. Dmitri is Quiet Kid, SS 29 vs a 50 cap - genuinely low-profile. Jayden is Caretaker. A Caretaker not yet noticing someone who already considers him a friend is a good gap to close in-fiction over the term rather than fix instantly on paper.\n\nTies to Drama Point checklist items: "notice someone is struggling," "look after someone who probably wouldn\'t look after themselves."\n\nRevisit if/when the Best Friend slot (currently empty) becomes the natural home for this.'}
+    ],
+    scenes: [
+      {title:'The J. Jonah Jameson reveal', text:'Setting: Thanksgiving, the year before Cork Academy. Jayden\'s 12, powers just manifesting.\n\nRobbie had been the one to actually catch it. Not JJJ - Robbie. A photo op gone sideways at some Bugle charity thing, a kid pulling a stunt for a camera crew that wasn\'t supposed to see what it saw, and Robbie quietly walking over, putting a hand on Jayden\'s shoulder, and saying, low, just for him: "Let\'s you and me go find some air, yeah?" Nobody else clocked it. That was Robbie\'s whole superpower, honestly - noticing things and choosing what to do with them like a person who actually cared what happened to you next.\n\nJJJ found out three days later. Not from Jayden. From Robbie, because Robbie doesn\'t lie to his boss and his boss is also, inconveniently, this kid\'s grandfather.\n\nThe version of that conversation Jayden actually witnessed wasn\'t loud. That\'s almost the worst part - he\'d braced for loud, for the JJJ everyone in New York thinks they know, slamming a fist on a desk, calling it a menace before he\'d even said the word "mutant" all the way through. Instead his grandfather just sat there for a long moment in his own dining room, fork down, and said, quietly, like he was working out a math problem out loud: "How long has this been happening."\n\n"A few months."\n\n"And you didn\'t think-" He stopped himself. Started over, softer, which was somehow worse. "Your father know?"\n\n"Yeah."\n\n"And he\'s fine with it."\n\n"He\'s fine with me, Dad. It\'s the same thing."\n\nJJJ didn\'t answer that. He picked his fork back up, ate maybe four more bites in total silence, and then said, to the table generally, not really to Jayden: "I\'ve spent thirty years telling people to be careful what they trust just because it can fly or lift a bus. I don\'t get to stop being careful because it\'s my own blood." A pause. "Doesn\'t mean I stopped loving you. Means I\'m going to be annoying about it. Ask your father, he\'ll tell you I\'ve always been annoying about the people I love."\n\nThat\'s it. That\'s the whole reveal. No ultimatum, no disowning, no Daily Bugle expose with his own grandson\'s face on it. Just a bar lowered exactly as far as it needed to for JJJ to still show up to things - games, graduations, whatever this is going to be at Cork - while making it unmistakably clear he hasn\'t relaxed about what Jayden is even if he\'s never once wavered on who Jayden is to him.\n\nThey\'ve never really revisited it directly since. It just lives underneath every phone call now - JJJ asking careful, deflectable questions ("how\'s school," never "how\'s the power stuff"), and Jayden learning, without ever being told to, which parts of his actual life to leave out of those calls.'},
+      {title:'Andrea Bruno rivalry - Combat Training aftermath', text:'Setting: Early in the term, their shared dorm room, after a Combat Training session.\n\nAndrea\'s already back when Jayden gets in, sitting cross-legged on his bed with a textbook open that he is very obviously not reading, because his eyes are on the door.\n\n"You want to explain the thing with Vasquez?"\n\nJayden drops his bag. "What thing."\n\n"You let him tag you. In front of Instructor Doyle. You had the angle - I watched you not take it - and you let a Sophomore land a hit so he\'d feel good about it, and now Doyle thinks you\'re sloppy." Andrea says the word like it physically pains him. "Some of us are actually trying to be taken seriously in that room."\n\n"He\'s been getting wrecked every session, man, I wasn\'t trying to-"\n\n"I don\'t care what you were trying to do." Andrea\'s voice has that particular edge it gets, the one that isn\'t quite anger, more like something that\'s been rehearsed. "You can afford to lose a point in front of Doyle. People already like you. You could set the whole training dummy on fire by accident and somebody would post about how iconic it was. I cannot afford one bad session, Jameson. Nobody\'s filming my mistakes with a heart-eyes filter."\n\nAnd there it is - not really about Vasquez at all.\n\nJayden could leave it. Normally does. Tonight, something makes him actually look at his roommate instead of just riding it out. "You think I don\'t work for any of it."\n\n"I think you\'ve never had to find out what happens if you don\'t."\n\nIt lands harder than Andrea probably means it to - or maybe exactly as hard as he means it to. Neither of them says anything for a second.\n\n"...I\'ll tell Doyle I threw the round on purpose next time. Own it properly instead of letting it look like I got caught out." Jayden says it flatly, not performing generosity, just - actually hearing him. "That help?"\n\nAndrea blinks, thrown slightly off his own momentum. "That\'s not - I wasn\'t asking you to fix my problem."\n\n"I know. Doing it anyway." Jayden pulls his shirt off over his head, done with the conversation in the specific way that means it isn\'t actually over, just paused. "You can still be annoyed at me. Just also let me not be the villain of it."\n\nAndrea doesn\'t answer that either way. Goes back to his textbook. But he doesn\'t say anything else the rest of the night, which - for Andrea - is basically a truce.'}
+    ],
+    rumors: [],
+    classList: [
+      {type:'PC', name:'Jayden Jameson (Beacon)', power:'Light Control, Molecular Creation', roleClass:'Caretaker / Cool Kid', notes:'Played by you.'},
+      {type:'PC', name:'Phineas Wake (Half-Life)', power:'Shapeshifting, Body Resistance, Disintegration, Tracking, Hard Radiation Control', roleClass:'Prodigy / Normie', notes:'Changeling. Roommate: Ali Amrani. Clubs: Engineering, Home Economics.'},
+      {type:'PC', name:'Dmitri Vinkov (Remote)', power:'Weather Control, Machine Animation, Clairvoyance', roleClass:'Quiet Kid / Normie', notes:'Breed Mutant, Russian. Roommate: James Kelly. Lists Jayden as a Friend on his own sheet.'},
+      {type:'NPC', name:'Sarah Byrne', power:'Carrier Wave Am(50)', roleClass:'Quiet Kid / Normie', notes:'Perceptive, laid-back. Secret: sent here for reasons beyond education, arranged by someone back home.'},
+      {type:'NPC', name:'Emma Scott', power:'Vibration Emission Gd(10)', roleClass:'Class Clown / Cool Kid', notes:'Jayden\'s Friend 2. Bonded over "I Think You Should Leave." Ambitious, driven. Secret: sent here for reasons beyond education.'},
+      {type:'NPC', name:'Sarah Ryan', power:'Communicate w/ Animals Ex(20)', roleClass:'Rebel / Loser', notes:'Shy, uncertain. Secret: parents don\'t fully know about her powers.'},
+      {type:'NPC', name:'Giulia Moretti', power:'Speech-Throwing Gd(10)', roleClass:'Jock / Cool Kid', notes:'Jayden\'s Friend 1. Made her custom dumbbells. Complicated. Secret: unreported power side effect.'},
+      {type:'NPC', name:'Chiara Ricci', power:'True Invulnerability Gd(10)', roleClass:'Jock / Normie', notes:'Curious, inventive. Secret: sent here for reasons beyond education.'},
+      {type:'NPC', name:'Fatma Nasser', power:'Force Field Ex(20)', roleClass:'Outcast-Pariah / Loser', notes:'Jayden\'s Clubmate (Combat Training). Ambitious, driven. Secret: knows something about a student/faculty member, hasn\'t shared it.'},
+      {type:'NPC', name:'Grace Wright', power:'Vibration Emission Gd(10)', roleClass:'Rebel / Normie', notes:'Shy, uncertain. Secret: unreported power side effect.'},
+      {type:'NPC', name:'Ines Petit', power:'Internal Limbo Ex(20)', roleClass:'Class Clown / Normie', notes:'Curious, inventive. Secret: unreported power side effect.'},
+      {type:'NPC', name:'Sophie Smith', power:'Hyper-Hearing Rm(30)', roleClass:'New Arrival / Normie', notes:'Complicated. Secret: parents don\'t fully know about her powers.'},
+      {type:'NPC', name:'Olivia Jones', power:'Hyper-Breath Rm(30)', roleClass:'Outsider / Normie', notes:'Overconfident. Secret: parents don\'t fully know; power manifested within the past year.'},
+      {type:'NPC', name:'Olivia Hunt (Gumshoe)', power:'Malleability Uc(45)', roleClass:'New Arrival / Cool Kid', notes:'Jayden\'s Friend 3, arrived week two. Makeup tutorial influencer - cross-following friendship. Irish.'},
+      {type:'NPC', name:'Sara Ali (Levitor)', power:'Levitation Ty(5)', roleClass:'Overachiever / Normie', notes:'Middle Eastern.'},
+      {type:'NPC', name:'Elias Karlsson', power:'Telescopic Vision Rm(30)', roleClass:'Class Clown / Normie', notes:'Active, dynamic. Secret: knows something about a student/faculty member.'},
+      {type:'NPC', name:'Ali Amrani', power:'Total Memory Gd(10)', roleClass:'Rich Kid / Cool Kid', notes:'Phineas\'s roommate. Overconfident. Secret: parents don\'t fully know.'},
+      {type:'NPC', name:'Aaron Kelly', power:'Sonic Generation Ex(20)', roleClass:'Caretaker / Loser', notes:'Perceptive, laid-back. Secret: unreported power side effect.'},
+      {type:'NPC', name:'Jack Fitzgerald', power:'Rm(30) - power name unconfirmed, possibly Aura', roleClass:'Caretaker / Normie', notes:'Perceptive, laid-back. Secret: knows something about a student/faculty member.'},
+      {type:'NPC', name:'Andrea Bruno', power:'Heat Generation Ex(20)', roleClass:'Overachiever / Loser', notes:'Jayden\'s Rival and roommate. Pretentious, argues constantly - resents Jayden coasting on his following while Andrea grinds for validation. Complicated. Secret: sent here for reasons beyond education.'},
+      {type:'NPC', name:'James Kelly', power:'Radiowave Control In(40)', roleClass:'Social Butterfly / Normie', notes:'Jayden\'s Crush. Dmitri\'s roommate. Working with Jayden on enhancement gear for Emma. Curious, inventive. Secret: feelings for someone that\'d be socially complicated if known.'},
+      {type:'NPC', name:'Gustave Babin', power:'Hyper Invention Rm(30) (+3 hidden - real ceiling higher)', roleClass:'Prodigy / Normie', notes:'Entitled, complicated prick. Secret: son of villains Vapor and Vector; powers understated to the school. Power manifested at puberty.'},
+      {type:'NPC', name:'Rayan Marrakchi (Now You See Me)', power:'Blending In(40)', roleClass:'Outcast / Loser', notes:'North African.'},
+      {type:'NPC', name:'Jade Durand', power:'Spirit Vampirism In(40)', roleClass:'Social Butterfly / Normie', notes:'Classmate but excluded from the roommate roll (unsafe for sustained close proximity while roommate sleeps). French, overconfident. Secret: has a contact outside the school she hasn\'t mentioned; power manifested within the past year.'}
+    ],
+    currentDate: 'August 3 (Orientation)',
+    calendar: [
+      {month:'August (Fall term begins)', events:'3 - Orientation\n4 - Classes begin\n5 - Club sign-ups begin\n14 - Club sign-ups end'},
+      {month:'September', events:'5, 12, 26 - Sporting events (Fall)\n15 - Voting for Student Council\n18-19 - Survival Trip Power Training Class\n23-25 - Midterms'},
+      {month:'October', events:'3, 10, 17, 24, 31 - Sporting events (Fall)\n6-7 - School Pictures\n9 - Single Power Training Tournament\n26-30 - Fall Break'},
+      {month:'November (Winter term begins 16th)', events:'2-3 - Parent-Teacher Conferences\n4 - Homecoming\n5-7 - Sporting Event Final Tournament (Fall)\n9-13 - Fall Finals\n9-20 - Club sign-ups (Winter)\n16 - Winter term begins'},
+      {month:'December', events:'4 - Pair Power Training Tournament\n10 - Charity Auction Night\n18 - Winter Gala\n21-31 - Winter Break'},
+      {month:'January', events:'1-8 - Winter Break continues\n9, 23, 30 - Sporting events (Winter)\n27-29 - Midterms'},
+      {month:'February', events:'1 - St. Brigid\'s Day\n6, 13, 20, 27 - Sporting events (Winter)\n11 - Flower Day\n12 - Valentine Dance'},
+      {month:'March (Spring term begins 22nd)', events:'5 - Gadgetry Expo\n6 - Sporting event (Winter)\n11-13 - Sporting Event Final Tournament (Winter)\n15-19 - Winter Finals\n15-26 - Club sign-ups (Spring)\n17 - St. Patrick\'s Day\n22 - Spring term begins\n29-31 - Pentacle Tournament (interschool championship)\n29 - Easter Monday'},
+      {month:'April', events:'1 - Pentacle Tournament continues\n17, 24 - Sporting events (Spring)\n23 - Hero Scenario Power Training Class\n27 - Summer Internship Fair'},
+      {month:'May', events:'1, 8, 15, 29 - Sporting events (Spring)\n3 - May Day\n5-7 - Midterms\n9-16 - Beach Trip / Spring Break\n17-23 - College Pentacle Tournament\n31 - Parent-Teacher Conference'},
+      {month:'June (year ends)', events:'1-2 - Parent-Teacher Conference / School Festival\n5, 19 - Sporting events (Spring)\n8 - Summer Internship Placement\n11 - Prom\n21-25 - Spring Finals\n27 - Graduation\n28+ - Summer Vacation'},
+      {month:'Next August (Sophomore year begins)', events:'2 - Orientation\n3 - Classes begin'}
+    ]
+  };
+
+  function mergeDefaults(loaded){
+    const merged = JSON.parse(JSON.stringify(defaultData));
+    if (!loaded) return merged;
+    Object.keys(merged).forEach(key => {
+      if (loaded[key] === undefined) return;
+      const isPlainObject = typeof merged[key] === 'object' && merged[key] !== null && !Array.isArray(merged[key]);
+      merged[key] = isPlainObject ? Object.assign({}, merged[key], loaded[key]) : loaded[key];
+    });
+    return merged;
+  }
+
+  let data = null;
+
+  // Storage backend: use Claude's window.storage when available (inside Claude),
+  // otherwise fall back to browser localStorage (standalone / GitHub Pages / any normal browser).
+  const usingClaudeStorage = typeof window !== 'undefined' && window.storage
+    && typeof window.storage.get === 'function' && typeof window.storage.set === 'function';
+
+  async function storageGet(key) {
+    if (usingClaudeStorage) {
+      const res = await window.storage.get(key, false);
+      return res ? res.value : null;
+    }
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function storageSet(key, value) {
+    if (usingClaudeStorage) {
+      await window.storage.set(key, value, false);
+      return;
+    }
+    localStorage.setItem(key, value);
+  }
+
+  async function load(){
+    let loaded = null;
+    try {
+      const raw = await storageGet(STORE_KEY);
+      loaded = raw ? JSON.parse(raw) : null;
+    } catch(e) {
+      loaded = null;
+    }
+    data = mergeDefaults(loaded);
+    render();
+  }
+
+  async function save(){
+    try {
+      await storageSet(STORE_KEY, JSON.stringify(data));
+      document.getElementById('saveStatus').textContent = usingClaudeStorage ? 'Saved' : 'Saved to this browser';
+      setTimeout(()=>{ document.getElementById('saveStatus').textContent=''; }, 1800);
+    } catch(e) {
+      document.getElementById('saveStatus').textContent = 'Save failed';
+    }
+  }
+
+  function renderFeatTable(){
+    const table = document.getElementById('featTableDisplay');
+    let html = '<tr style="color:#9a9587; text-align:left;"><th>Rank</th><th>White</th><th>Green</th><th>Yellow</th><th>Red</th></tr>';
+    FEAT_TABLE.forEach(r => {
+      html += `<tr><td>${r.rank} (${r.num})</td><td>${r.white[0]}-${r.white[1]}</td><td>${r.green[0]}-${r.green[1]}</td><td>${r.yellow[0]}-${r.yellow[1]}</td><td>${r.red[0]}-${r.red[1]}</td></tr>`;
+    });
+    table.innerHTML = html;
+  }
+
+  function render(){
+    const statBody = document.getElementById('statBody');
+    statBody.innerHTML = '';
+    data.stats.forEach((s,i)=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td style="padding:4px 0;">${s.name}</td>
+        <td><input data-stat="${i}" data-field="base" value="${s.base}" style="width:70px;"></td>
+        <td><input data-stat="${i}" data-field="current" value="${s.current}" style="width:70px;"></td>`;
+      statBody.appendChild(tr);
+    });
+    document.getElementById('healthCur').value = data.healthCur;
+    document.getElementById('healthMax').textContent = data.healthMax;
+    document.getElementById('karma').value = data.karma;
+    document.getElementById('gpa').value = data.gpa;
+    document.getElementById('ss').value = data.ss;
+    document.getElementById('resourcesShow').textContent = data.resources;
+    document.getElementById('popularity').value = data.popularity;
+    document.getElementById('ssBadge').textContent = data.socialClass;
+
+    const attacksTable = document.getElementById('attacksTable');
+    attacksTable.innerHTML = '';
+    if (data.attacksList.length) {
+      let tblHtml = `<table style="width:100%; font-size:12px; border-collapse:collapse;">
+        <tr style="color:#9a9587; text-align:left;"><th>Name</th><th>Power</th><th>Attack</th><th>Damage</th><th>Notes</th><th></th></tr>`;
+      data.attacksList.forEach((a, i) => {
+        tblHtml += `<tr>
+          <td><input data-atk="${i}" data-field="name" value="${a.name.replace(/"/g,'&quot;')}" style="width:150px;"></td>
+          <td><input data-atk="${i}" data-field="power" value="${a.power.replace(/"/g,'&quot;')}" style="width:100px;"></td>
+          <td><input data-atk="${i}" data-field="attack" value="${a.attack.replace(/"/g,'&quot;')}" style="width:100px;"></td>
+          <td><input data-atk="${i}" data-field="damage" value="${a.damage.replace(/"/g,'&quot;')}" style="width:140px;"></td>
+          <td><input data-atk="${i}" data-field="notes" value="${a.notes.replace(/"/g,'&quot;')}" style="width:140px;"></td>
+          <td><button data-remove-atk="${i}">&times;</button></td>
+        </tr>`;
+      });
+      tblHtml += '</table>';
+      attacksTable.innerHTML = tblHtml;
+    } else {
+      attacksTable.innerHTML = '<div style="color:#9a9587; font-size:13px;">No attacks listed yet.</div>';
+    }
+    document.getElementById('defFF').value = data.defense.ff;
+    document.getElementById('defArmor').value = data.defense.armor;
+
+    const powersList = document.getElementById('powersList');
+    powersList.innerHTML = '';
+    data.powers.forEach((p,i)=>{
+      const div = document.createElement('div');
+      div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px; display:flex; align-items:center; gap:12px;';
+      div.innerHTML = `<div style="flex:1; font-size:13px; font-weight:600;">${p.name}</div>
+        <div style="font-size:12px; color:#9a9587;">Rank</div>
+        <input data-power="${i}" data-field="rank" value="${p.rank}" style="width:90px;">
+        <div style="font-size:12px; color:#9a9587;">Control</div>
+        <input data-power="${i}" data-field="control" type="number" value="${p.control}" style="width:80px;">`;
+      powersList.appendChild(div);
+    });
+    document.getElementById('stuntNotes').value = data.stuntNotes;
+
+    document.getElementById('socialRole').value = data.socialRole;
+    document.getElementById('socialClass').value = data.socialClass;
+
+    const relList = document.getElementById('relList');
+    relList.innerHTML = '';
+    data.relationships.forEach((r,i)=>{
+      const row = document.createElement('div');
+      row.style = 'margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #20242e;';
+      row.innerHTML = `<div style="display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:4px;">
+          <div style="width:80px; color:#c9a227; font-size:11px;">${r.type}</div>
+          <input data-rel="${i}" data-field="person" value="${r.person}" style="flex:1;">
+          <input data-rel="${i}" data-field="rank" type="number" value="${r.rank}" style="width:68px;">
+        </div>
+        <textarea data-rel="${i}" data-field="notes" placeholder="Notes / log for this relationship..." rows="2" style="width:100%; font-size:12px;">${r.notes || ''}</textarea>`;
+      relList.appendChild(row);
+    });
+
+    const ssLog = document.getElementById('ssLog');
+    ssLog.innerHTML = '';
+    if (data.ssLog.length) {
+      data.ssLog.slice().reverse().forEach((e) => {
+        const idx = data.ssLog.indexOf(e);
+        const row = document.createElement('div');
+        row.style = 'display:flex; align-items:center; gap:6px; margin-bottom:4px;';
+        row.innerHTML = `<input data-ssevent="${idx}" data-field="value" type="number" value="${e.value}" style="width:70px;">
+          <input data-ssevent="${idx}" data-field="label" value="${(e.label||'').replace(/"/g,'&quot;')}" style="flex:1;">
+          <button data-remove-ssevent="${idx}">&times;</button>`;
+        ssLog.appendChild(row);
+      });
+    } else {
+      ssLog.innerHTML = '<div style="opacity:0.5;">No events logged yet.</div>';
+    }
+
+    const rumorsList = document.getElementById('rumorsList');
+    rumorsList.innerHTML = '';
+    if (data.rumors.length) {
+      data.rumors.forEach((rm, i) => {
+        const div = document.createElement('div');
+        div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+        div.innerHTML = `
+          <div style="display:flex; gap:8px; align-items:flex-start; margin-bottom:6px;">
+            <textarea data-rumor="${i}" data-field="text" placeholder="What's the rumor?" rows="2" style="flex:1; font-size:13px;">${rm.text || ''}</textarea>
+            <button data-remove-rumor="${i}">&times;</button>
+          </div>
+          <div style="font-size:11px; color:#9a9587; margin-bottom:4px;">Potential negative outcome if not dispelled</div>
+          <textarea data-rumor="${i}" data-field="outcome" placeholder="What happens if this sticks?" rows="2" style="width:100%; font-size:12px; margin-bottom:6px;">${rm.outcome || ''}</textarea>
+          <label style="font-size:12px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" data-rumor="${i}" data-field="dispelled" ${rm.dispelled ? 'checked' : ''}> Dispelled
+          </label>`;
+        rumorsList.appendChild(div);
+      });
+    } else {
+      rumorsList.innerHTML = '<div style="color:#9a9587; font-size:13px;">No rumors logged.</div>';
+    }
+
+    document.getElementById('dramaPool').value = data.dramaPool;
+    document.getElementById('dramaBank').value = data.dramaBank;
+    document.getElementById('dpSession').value = data.dpSession;
+
+    const dpChecklist = document.getElementById('dpChecklist');
+    dpChecklist.innerHTML = '';
+    data.dpChecklist.forEach((item,i)=>{
+      const row = document.createElement('label');
+      row.style = 'display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:5px; cursor:pointer;';
+      row.innerHTML = `<input type="checkbox" data-dp="${i}" ${item.done?'checked':''}> ${item.label}`;
+      dpChecklist.appendChild(row);
+    });
+
+    document.getElementById('bgHomeland').value = data.bg.homeland;
+    document.getElementById('bgAge').value = data.bg.age;
+    document.getElementById('bgHeight').value = data.bg.height;
+    document.getElementById('bgBlood').value = data.bg.blood;
+    document.getElementById('bgNat').value = data.bg.nat;
+    document.getElementById('bgOrigin').value = data.bg.origin;
+    document.getElementById('family').value = data.family;
+    document.getElementById('talents').value = data.talents;
+    const contactsList = document.getElementById('contactsList');
+    contactsList.innerHTML = '';
+    if (data.contactsList.length) {
+      data.contactsList.forEach((c, i) => {
+        const div = document.createElement('div');
+        div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+        div.innerHTML = `
+          <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+            <input data-contact="${i}" data-field="name" value="${(c.name||'').replace(/"/g,'&quot;')}" placeholder="Contact name" style="flex:1; font-weight:600;">
+            <button data-remove-contact="${i}">&times;</button>
+          </div>
+          <textarea data-contact="${i}" data-field="description" placeholder="Details / how they can help / risks..." rows="2" style="width:100%; font-size:12px;">${c.description || ''}</textarea>`;
+        contactsList.appendChild(div);
+      });
+    } else {
+      contactsList.innerHTML = '<div style="color:#9a9587; font-size:13px;">No contacts logged.</div>';
+    }
+    document.getElementById('clubs').value = data.clubs;
+    document.getElementById('equipment').value = data.equipment;
+
+    const sessionsList = document.getElementById('sessionsList');
+    sessionsList.innerHTML = '';
+    data.sessions.slice().reverse().forEach((s) => {
+      const idx = data.sessions.indexOf(s);
+      const div = document.createElement('div');
+      div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+      div.innerHTML = `<div style="font-weight:600; font-size:13px; margin-bottom:6px;">${s.title}</div>
+        <textarea data-session="${idx}" rows="3" style="width:100%;">${s.notes}</textarea>`;
+      sessionsList.appendChild(div);
+    });
+    if (data.sessions.length === 0) {
+      sessionsList.innerHTML = '<div style="color:#9a9587; font-size:13px;">No session entries yet.</div>';
+    }
+
+    const threadsList = document.getElementById('threadsList');
+    threadsList.innerHTML = '';
+    data.threads.slice().reverse().forEach((t) => {
+      const idx = data.threads.indexOf(t);
+      const div = document.createElement('div');
+      div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+      div.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div style="font-weight:600; font-size:13px;">${t.title.replace(/</g,'&lt;')}</div>
+          <button data-remove-thread="${idx}">&times;</button>
+        </div>
+        <textarea data-thread="${idx}" rows="5" style="width:100%; font-size:13px;">${t.notes}</textarea>`;
+      threadsList.appendChild(div);
+    });
+    if (data.threads.length === 0) {
+      threadsList.innerHTML = '<div style="color:#9a9587; font-size:13px;">No open threads.</div>';
+    }
+
+    const scenesList = document.getElementById('scenesList');
+    scenesList.innerHTML = '';
+    data.scenes.slice().reverse().forEach((s) => {
+      const idx = data.scenes.indexOf(s);
+      const div = document.createElement('div');
+      div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+      div.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div style="font-weight:600; font-size:13px;">${s.title.replace(/</g,'&lt;')}</div>
+          <button data-remove-scene="${idx}">&times;</button>
+        </div>
+        <textarea data-scene="${idx}" rows="10" style="width:100%; font-size:13px;">${s.text}</textarea>`;
+      scenesList.appendChild(div);
+    });
+    if (data.scenes.length === 0) {
+      scenesList.innerHTML = '<div style="color:#9a9587; font-size:13px;">No scenes written yet.</div>';
+    }
+
+    const classList = document.getElementById('classList');
+    classList.innerHTML = '';
+    if (data.classList.length) {
+      let tblHtml = `<table style="width:100%; font-size:12px; border-collapse:collapse;">
+        <tr style="color:#9a9587; text-align:left;"><th>Type</th><th>Name</th><th>Power</th><th>Role / Class</th><th>Notes</th><th></th></tr>`;
+      data.classList.forEach((c, i) => {
+        tblHtml += `<tr>
+          <td><select data-classmate="${i}" data-field="type" style="width:60px;">
+                <option value="PC" ${c.type==='PC'?'selected':''}>PC</option>
+                <option value="NPC" ${c.type==='NPC'?'selected':''}>NPC</option>
+              </select></td>
+          <td><input data-classmate="${i}" data-field="name" value="${(c.name||'').replace(/"/g,'&quot;')}" style="width:150px;"></td>
+          <td><input data-classmate="${i}" data-field="power" value="${(c.power||'').replace(/"/g,'&quot;')}" style="width:170px;"></td>
+          <td><input data-classmate="${i}" data-field="roleClass" value="${(c.roleClass||'').replace(/"/g,'&quot;')}" style="width:130px;"></td>
+          <td><input data-classmate="${i}" data-field="notes" value="${(c.notes||'').replace(/"/g,'&quot;')}" style="width:220px;"></td>
+          <td><button data-remove-classmate="${i}">&times;</button></td>
+        </tr>`;
+      });
+      tblHtml += '</table>';
+      classList.innerHTML = tblHtml;
+    } else {
+      classList.innerHTML = '<div style="color:#9a9587; font-size:13px;">No classmates logged.</div>';
+    }
+
+    document.getElementById('currentDate').value = data.currentDate;
+    const calendarList = document.getElementById('calendarList');
+    calendarList.innerHTML = '';
+    data.calendar.forEach((c, i) => {
+      const div = document.createElement('div');
+      div.style = 'background:#20242e; border-radius:8px; padding:10px 12px; margin-bottom:8px;';
+      div.innerHTML = `<div style="font-weight:600; font-size:13px; margin-bottom:6px; color:#c9a227;">${c.month.replace(/</g,'&lt;')}</div>
+        <textarea data-calendar="${i}" rows="4" style="width:100%; font-size:12px;">${c.events}</textarea>`;
+      calendarList.appendChild(div);
+    });
+
+    if (!document.getElementById('featRank').options.length) {
+      FEAT_TABLE.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.rank;
+        opt.textContent = `${r.rank} (${r.num})`;
+        document.getElementById('featRank').appendChild(opt);
+      });
+    }
+    renderFeatTable();
+
+    attachListeners();
+  }
+
+  function collect(){
+    document.querySelectorAll('[data-stat]').forEach(el=>{
+      data.stats[el.dataset.stat][el.dataset.field] = el.value;
+    });
+    data.healthCur = Number(document.getElementById('healthCur').value) || 0;
+    data.karma = Number(document.getElementById('karma').value) || 0;
+    data.gpa = Number(document.getElementById('gpa').value) || 0;
+    data.ss = Number(document.getElementById('ss').value) || 0;
+    data.popularity = Number(document.getElementById('popularity').value) || 0;
+
+    document.querySelectorAll('[data-power]').forEach(el=>{
+      const field = el.dataset.field;
+      data.powers[el.dataset.power][field] = field==='control' ? Number(el.value)||0 : el.value;
+    });
+    data.stuntNotes = document.getElementById('stuntNotes').value;
+
+    data.socialRole = document.getElementById('socialRole').value;
+    data.socialClass = document.getElementById('socialClass').value;
+
+    document.querySelectorAll('[data-rel]').forEach(el=>{
+      const field = el.dataset.field;
+      data.relationships[el.dataset.rel][field] = field==='rank' ? Number(el.value)||0 : el.value;
+    });
+
+    document.querySelectorAll('[data-rumor]').forEach(el=>{
+      const field = el.dataset.field;
+      data.rumors[el.dataset.rumor][field] = field==='dispelled' ? el.checked : el.value;
+    });
+
+    document.querySelectorAll('[data-ssevent]').forEach(el=>{
+      const field = el.dataset.field;
+      data.ssLog[el.dataset.ssevent][field] = field==='value' ? Number(el.value)||0 : el.value;
+    });
+
+    data.dramaPool = Number(document.getElementById('dramaPool').value) || 0;
+    data.dramaBank = Number(document.getElementById('dramaBank').value) || 0;
+    data.dpSession = Number(document.getElementById('dpSession').value) || 0;
+
+    document.querySelectorAll('[data-dp]').forEach(el=>{
+      data.dpChecklist[el.dataset.dp].done = el.checked;
+    });
+
+    data.bg.homeland = document.getElementById('bgHomeland').value;
+    data.bg.age = document.getElementById('bgAge').value;
+    data.bg.height = document.getElementById('bgHeight').value;
+    data.bg.blood = document.getElementById('bgBlood').value;
+    data.bg.nat = document.getElementById('bgNat').value;
+    data.bg.origin = document.getElementById('bgOrigin').value;
+    data.family = document.getElementById('family').value;
+    data.talents = document.getElementById('talents').value;
+    document.querySelectorAll('[data-contact]').forEach(el=>{
+      data.contactsList[el.dataset.contact][el.dataset.field] = el.value;
+    });
+    data.clubs = document.getElementById('clubs').value;
+    data.equipment = document.getElementById('equipment').value;
+
+    document.querySelectorAll('[data-session]').forEach(el => {
+      data.sessions[el.dataset.session].notes = el.value;
+    });
+
+    document.querySelectorAll('[data-thread]').forEach(el => {
+      data.threads[el.dataset.thread].notes = el.value;
+    });
+
+    document.querySelectorAll('[data-scene]').forEach(el => {
+      data.scenes[el.dataset.scene].text = el.value;
+    });
+
+    document.querySelectorAll('[data-classmate]').forEach(el => {
+      data.classList[el.dataset.classmate][el.dataset.field] = el.value;
+    });
+
+    data.currentDate = document.getElementById('currentDate').value;
+    document.querySelectorAll('[data-calendar]').forEach(el => {
+      data.calendar[el.dataset.calendar].events = el.value;
+    });
+
+    document.querySelectorAll('[data-atk]').forEach(el => {
+      data.attacksList[el.dataset.atk][el.dataset.field] = el.value;
+    });
+    data.defense.ff = document.getElementById('defFF').value;
+    data.defense.armor = document.getElementById('defArmor').value;
+
+    document.getElementById('ssBadge').textContent = data.socialClass;
+  }
+
+  function attachListeners(){
+    document.getElementById('addSsEvent').onclick = () => {
+      const label = document.getElementById('ssEventLabel').value.trim();
+      const value = Number(document.getElementById('ssEventValue').value) || 0;
+      if(!label) return;
+      data.ssLog.push({label, value});
+      data.ss = data.ss + value;
+      document.getElementById('ssEventLabel').value = '';
+      document.getElementById('ssEventValue').value = '';
+      render();
+    };
+    document.getElementById('convertDp').onclick = () => {
+      collect();
+      data.dramaBank += data.dramaPool * 5;
+      data.karma += data.dramaPool * 5;
+      data.dramaPool = 0;
+      render();
+    };
+    document.getElementById('yearEndReset').onclick = () => {
+      collect();
+      const classModifier = data.socialClass === 'Cool Kid' ? 10 : data.socialClass === 'Loser' ? -10 : 0;
+      const personalityStat = data.stats.find(s => s.name === 'Personality');
+      const personalityMatch = personalityStat ? personalityStat.current.match(/\d+/) : null;
+      const personalityFloor = personalityMatch ? Number(personalityMatch[0]) : 0;
+      let newSs = Math.floor(data.ss / 2) + classModifier;
+      if (newSs < personalityFloor) newSs = personalityFloor;
+      data.ssLog.push({label:`Year-end reset (was ${data.ss}, halved + ${classModifier} class mod, floor ${personalityFloor})`, value: newSs - data.ss});
+      data.ss = newSs;
+      render();
+    };
+    document.getElementById('addSession').onclick = () => {
+      const title = document.getElementById('sessionTitle').value.trim();
+      if (!title) return;
+      data.sessions.push({title, notes: ''});
+      document.getElementById('sessionTitle').value = '';
+      render();
+    };
+    document.getElementById('addThread').onclick = () => {
+      collect();
+      const title = document.getElementById('threadTitle').value.trim();
+      if (!title) return;
+      data.threads.push({title, notes: ''});
+      document.getElementById('threadTitle').value = '';
+      render();
+    };
+    document.querySelectorAll('[data-remove-thread]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.threads.splice(Number(btn.dataset.removeThread), 1);
+        render();
+      };
+    });
+    document.getElementById('addScene').onclick = () => {
+      collect();
+      const title = document.getElementById('sceneTitle').value.trim();
+      if (!title) return;
+      data.scenes.push({title, text: ''});
+      document.getElementById('sceneTitle').value = '';
+      render();
+    };
+    document.querySelectorAll('[data-remove-scene]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.scenes.splice(Number(btn.dataset.removeScene), 1);
+        render();
+      };
+    });
+    document.getElementById('addClassmate').onclick = () => {
+      collect();
+      data.classList.push({type:'NPC', name:'', power:'', roleClass:'', notes:''});
+      render();
+    };
+    document.querySelectorAll('[data-remove-classmate]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.classList.splice(Number(btn.dataset.removeClassmate), 1);
+        render();
+      };
+    });
+    document.getElementById('rollFeat').onclick = () => {
+      const rankName = document.getElementById('featRank').value;
+      const rank = FEAT_TABLE.find(r => r.rank === rankName);
+      const roll = Math.floor(Math.random() * 100) + 1;
+      let color = 'White';
+      if (roll >= rank.red[0]) color = 'Red';
+      else if (roll >= rank.yellow[0]) color = 'Yellow';
+      else if (roll >= rank.green[0]) color = 'Green';
+      const colorMap = {White:'#9a9587', Green:'#639922', Yellow:'#BA7517', Red:'#E24B4A'};
+      document.getElementById('featResult').innerHTML = `Rolled <b class="mono">${roll}</b> on ${rankName} — <b style="color:${colorMap[color]};">${color}</b>`;
+    };
+    document.getElementById('addAttackRow').onclick = () => {
+      collect();
+      data.attacksList.push({name:'', power:'', attack:'', damage:'', notes:''});
+      render();
+    };
+    document.querySelectorAll('[data-remove-atk]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.attacksList.splice(Number(btn.dataset.removeAtk), 1);
+        render();
+      };
+    });
+    document.getElementById('addRumor').onclick = () => {
+      collect();
+      data.rumors.push({text:'', outcome:'', dispelled:false});
+      render();
+    };
+    document.querySelectorAll('[data-remove-rumor]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.rumors.splice(Number(btn.dataset.removeRumor), 1);
+        render();
+      };
+    });
+    document.querySelectorAll('[data-remove-ssevent]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.ssLog.splice(Number(btn.dataset.removeSsevent), 1);
+        render();
+      };
+    });
+    document.getElementById('addContact').onclick = () => {
+      collect();
+      data.contactsList.push({name:'', description:''});
+      render();
+    };
+    document.getElementById('refreshContactsTemplate').onclick = () => {
+      data.contactsList = JSON.parse(JSON.stringify(defaultData.contactsList));
+      render();
+    };
+    document.getElementById('refreshRelationshipsTemplate').onclick = () => {
+      data.relationships = JSON.parse(JSON.stringify(defaultData.relationships));
+      render();
+    };
+    document.querySelectorAll('[data-remove-contact]').forEach(btn => {
+      btn.onclick = () => {
+        collect();
+        data.contactsList.splice(Number(btn.dataset.removeContact), 1);
+        render();
+      };
+    });
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      collect();
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
+      document.getElementById('tab-'+btn.dataset.tab).style.display='block';
+    });
+  });
+
+  document.getElementById('saveBtn').addEventListener('click', ()=>{
+    collect();
+    save();
+  });
+
+  document.getElementById('exportDataBtn').addEventListener('click', ()=>{
+    try {
+      collect();
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'beacon-jameson-data.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      document.getElementById('saveStatus').textContent = 'Data exported';
+      setTimeout(()=>{ document.getElementById('saveStatus').textContent=''; }, 2000);
+    } catch(e) {
+      document.getElementById('saveStatus').textContent = 'Export failed';
+    }
+  });
+
+  document.getElementById('importDataBtn').addEventListener('click', ()=>{
+    document.getElementById('importFileInput').click();
+  });
+
+  document.getElementById('importFileInput').addEventListener('change', (ev)=>{
+    const file = ev.target.files && ev.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        data = mergeDefaults(parsed);
+        render();
+        document.getElementById('saveStatus').textContent = 'Imported — click Save changes to keep it';
+        setTimeout(()=>{ document.getElementById('saveStatus').textContent=''; }, 4000);
+      } catch(e) {
+        document.getElementById('saveStatus').textContent = 'Import failed — not a valid file';
+        setTimeout(()=>{ document.getElementById('saveStatus').textContent=''; }, 3000);
+      }
+      ev.target.value = '';
+    };
+    reader.onerror = () => {
+      document.getElementById('saveStatus').textContent = 'Import failed — could not read file';
+      ev.target.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  load();
+})();
+</script>
