@@ -62,7 +62,7 @@
   <div style="padding:20px 24px;">
 
     <div id="tab-overview" class="tab-panel">
-      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:18px;">
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:18px;">
         <div style="background:#20242e; border-radius:8px; padding:10px;">
           <div style="font-size:11px; color:#9a9587;">Health</div>
           <div class="mono"><input type="number" id="healthCur" style="width:68px;"> / <span id="healthMax" class="mono"></span></div>
@@ -79,9 +79,13 @@
           <div style="font-size:11px; color:#9a9587;">Social standing</div>
           <input type="number" id="ss" style="width:68px;"> /100
         </div>
+        <div style="background:#20242e; border-radius:8px; padding:10px;">
+          <div style="font-size:11px; color:#9a9587;">Tally</div>
+          <input type="number" id="tally" style="width:60px;">
+        </div>
       </div>
 
-      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+      <table style="width:100%; font-size:13px; border-collapse:collapse; color:#ffffff;">
         <thead>
           <tr style="text-align:left; color:#9a9587; font-size:11px;">
             <th style="padding:4px 0;">Stat</th><th>Base</th><th>Current</th>
@@ -91,8 +95,11 @@
       </table>
 
       <div style="margin-top:14px; font-size:12px; color:#9a9587;">
-        Resources <b class="mono" id="resourcesShow" style="color:#ece6d6;"></b> &middot;
-        Popularity <input type="number" id="popularity" style="width:65px;">
+        Resources <b class="mono" id="resourcesShow" style="color:#ece6d6;"></b>
+      </div>
+      <div style="margin-top:8px; font-size:12px; color:#9a9587; display:flex; gap:16px; align-items:center;">
+        <span>Popularity (Beacon) <input type="number" id="popularityBeacon" style="width:65px;"></span>
+        <span>Popularity (JayJay) <input type="number" id="popularityJayJay" style="width:65px;"></span>
       </div>
 
       <div style="margin-top:18px; border-top:1px solid #262b36; padding-top:12px;">
@@ -268,9 +275,10 @@
 
   </div>
 
-  <div style="padding:10px 24px 16px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #262b36;">
+  <div style="padding:10px 24px 16px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid #262b36; flex-wrap:wrap; gap:8px;">
     <span id="saveStatus" style="font-size:11px; color:#9a9587;"></span>
-    <div style="display:flex; gap:8px;">
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button id="resetDataBtn" style="border-color:#8b3a3a; color:#e8c4c4;">Reset to latest version</button>
       <button id="importDataBtn">Import data (JSON)</button>
       <input type="file" id="importFileInput" accept="application/json,.json" style="display:none;">
       <button id="exportDataBtn">Export my data (JSON)</button>
@@ -313,10 +321,10 @@
       {name:'Endurance', base:'In 40', current:'Ex 20'},
       {name:'Reason', base:'In 40', current:'In 40'},
       {name:'Intuition', base:'Ex 20', current:'Ex 20'},
-      {name:'Psyche', base:'Ex 20', current:'Ty 5'},
+      {name:'Psyche', base:'Ex 20', current:'Pr 4'},
       {name:'Personality', base:'Rm 30', current:'Rm 30'}
     ],
-    healthCur: 64, healthMax: 64, karma: 94, gpa: 4.0, ss: 50, resources: 'Good (10)', popularity: 0,
+    healthCur: 64, healthMax: 64, karma: 160, gpa: 4.0, ss: 50, tally: 2, resources: 'Good (10)', popularityBeacon: 0, popularityJayJay: 12,
     attacksList: [
       {name:'Punch', power:'—', attack:'Typical (5)', damage:'Poor (4)', notes:''},
       {name:'Coherent Blast (laser)', power:'Light Control', attack:'Fantastic (35)', damage:'Sensational (60)', notes:'Primary ranged attack'},
@@ -327,12 +335,12 @@
       {name:'Explosive Compound', power:'Molecular Creation', attack:'Fantastic (35)', damage:'Amazing (50), delayed/area', notes:'Future development, needs GM sign-off'}
     ],
     defense: {ff:'', armor:''},
-    equipment: '',
+    equipment: 'Ghillie Suit\nGhillie Tarp',
     powers: [
       {name:'Molecular Creation', rank:'Amz 50', control:4},
       {name:'Light Manipulation', rank:'Sn 60', control:10}
     ],
-    stuntNotes: 'HOUSE RULE: GM rules 1 lb = 1 HP for Molecular Creation (not 1 oz = 1 HP as written). Applies to combat damage-creation too. Effectively a 16x multiplier on material-per-Health across the board — at Control Poor(4), creates 4 lbs/turn for 4 HP; daily cap is still tied to total Health, now in lbs (64 HP = 64 lbs/day).\n\nLIGHT CONTROL\nUtility: Signal Flare, Glow-Up, Screen Glare, Warm Light, Basketball Court Trick\nDamaging: Coherent Blast (laser), Blinding Burst, Focused Beam (armor-piercing, future), Flash-Step Cover\n\nMOLECULAR CREATION\nUtility: Fabricate Support Gear, Field Patch, Care Package, Emergency Barrier, Battery Pack\nDamaging: Compound Projectile, Corrosive Compound, Explosive Compound (future), Encasement\n\nCOMBINED\nLight-Reactive Compound, Broadcast Rig\n\nCurrent Control (Poor/4) means Coherent Blast + Compound Projectile are the two damaging stunts usable now without relying on a FEAT every time.',
+    stuntNotes: 'HOUSE RULE: GM rules 1 lb = 1 HP for Molecular Creation (not 1 oz = 1 HP as written). Applies to combat damage-creation too. Effectively a 16x multiplier on material-per-Health across the board — at Control Poor(4), creates 4 lbs/turn for 4 HP; daily cap is still tied to total Health, now in lbs (64 HP = 64 lbs/day).\n\nLIGHT CONTROL\nUtility: Signal Flare, Glow-Up, Screen Glare, Warm Light, Basketball Court Trick\nDamaging: Coherent Blast (laser), Blinding Burst, Focused Beam (armor-piercing, future), Flash-Step Cover\n\nMOLECULAR CREATION\nUtility: Fabricate Support Gear, Field Patch, Care Package, Emergency Barrier, Battery Pack\nDamaging: Compound Projectile, Corrosive Compound, Explosive Compound (future), Encasement\n\nCOMBINED\nLight-Reactive Compound, Broadcast Rig\n\nCurrent Control (Poor/4) means Coherent Blast + Compound Projectile are the two damaging stunts usable now without relying on a FEAT every time.\n\nUNDER CONSIDERATION (from margin notes on physical sheet, not yet confirmed/built): Force Field, Invisibility, Camouflage — plus a repeated wishlist of Light Blast, Delete/Matter Creation, Magnifying Blast, Light Structures. Worth confirming with GM which of these are being actively pursued as new stunts.',
     socialRole: 'Caretaker', socialClass: 'Cool Kid',
     relationships: [
       {type:'Mentor', person:'Peter Parker', rank:30},
@@ -348,22 +356,22 @@
       {type:'Clubmate', person:'Fatma Nasser', rank:30, notes:'Name corrected from "Fatima Nassar." Outcast-Pariah / Loser. Force Field Ex(20) (corrected from Gd/10). Ambitious, driven hook; secret is knowing something about a student/faculty member she hasn\'t shared. Clubs: Chess (Winter), Combat Training (All-Year), Superheroics Club (All-Year, though flagged as not yet eligible as a Freshman).'}
     ],
     ssLog: [],
-    dramaPool: 0, dramaBank: 0, dpSession: 2,
+    dramaPool: 2, dramaBank: 0, dpSession: 0,
     dpChecklist: [
-      {label:'Help someone with a problem before they ask', done:false},
+      {label:'Help someone with a problem before they ask', done:true},
       {label:'Do something kind for someone without being asked and without expecting acknowledgment', done:false},
-      {label:'Look after someone who probably wouldn\'t do the same for you', done:false},
-      {label:'Absorb a social consequence - embarrassment, blame, awkwardness - to protect someone else', done:false},
+      {label:'Look after someone who probably wouldn\'t do the same for you', done:true},
+      {label:'Absorb a social consequence - embarrassment, blame, awkwardness - to protect someone else', done:true},
       {label:'Set aside what you need in order to address what someone else needs', done:false},
-      {label:'Be thanked - genuinely, sincerely - for something you did', done:false},
+      {label:'Be thanked - genuinely, sincerely - for something you did', done:true},
       {label:'Do something for yourself, or hit your limit', done:false},
-      {label:'Talk to a student you haven\'t spoken to in a while', done:false},
+      {label:'Talk to a student you haven\'t spoken to in a while', done:true},
       {label:'Use your power to solve an entirely mundane problem', done:false},
-      {label:'Do something just because it\'s cool, or because it makes things more dramatic', done:false}
+      {label:'Do something just because it\'s cool, or because it makes things more dramatic', done:true}
     ],
     bg: {homeland:'NYC', age:'14', height:'6\'4"', blood:'O-', nat:'American', origin:'Random Mutant'},
     family: 'Father: John Jonah Jameson\nMother: Chelsea (sports reporter)\nGrandfather: J. Jonah Jameson (working relationship, conflicted about the mutant gene)',
-    talents: 'Student (halves Karma cost of Talent purchases, lost at graduation)\nBasketball',
+    talents: 'Student (halves Karma cost of Talent purchases, lost at graduation)\nBasketball - the team likes him (+2CS to tryouts)',
     contactsList: [
       {name:'Joseph "Robbie" Robertson', description:'Editor-in-chief, Daily Bugle. J. Jonah Jameson\'s longtime editor, and has always acted as a surrogate father/grandfather to Jayden - showing up for him in a way his own family, busy and complicated, hasn\'t always managed.\n\nBenefit - Institutional media access: real adult-world press credibility and gatekeeper access. Can get something fact-checked, run, held, or quietly killed through actual journalism channels - moves adults, institutions, and public record, not just a peer following.\nBenefit - Grounded adult judgment: someone who tells Jayden the truth and helps him think things through rather than just handing over a resource. Coming to Robbie with a personal (not plot) problem should carry a reduced Karma cost or an automatic good-advice result.\n\nConfirmed connection: Robbie is one of the very few people ever trusted with Peter Parker\'s secret identity, in this continuity. That gives Jayden\'s Mentor (Peter) and this Contact a real, pre-existing link.'},
       {name:'Cork Academy', description:'The school itself as a Contact - facilities, faculty, and institutional weight.\n\nBenefit - Facilities and expertise access: training facilities, labs, library/archives, and faculty expertise across nearly any subject or specialty a staff member covers. Good for research, safe practice space for an unmastered stunt, or a real opinion on mutant physiology/powers.\nBenefit - Safety net: the infirmary, faculty oversight, and the school\'s capacity to handle "a student got hurt/into trouble" quietly and competently - the contact to lean on when something\'s gone wrong on campus and needs fast, discreet handling.\n\nLimit: campus-bound. No help with NYC problems, family matters, or anything involving JayJay\'s public life.\nRisk: cuts both ways. Faculty are still faculty - leaning on this for something that reveals rule-breaking, reckless power use, or a secret he\'s keeping (the mutant/JayJay overlap) risks the school acting on what it learns rather than just helping.'},
@@ -381,30 +389,32 @@
     ],
     rumors: [],
     classList: [
-      {type:'PC', name:'Jayden Jameson (Beacon)', power:'Light Control, Molecular Creation', roleClass:'Caretaker / Cool Kid', notes:'Played by you.'},
-      {type:'PC', name:'Phineas Wake (Half-Life)', power:'Shapeshifting, Body Resistance, Disintegration, Tracking, Hard Radiation Control', roleClass:'Prodigy / Normie', notes:'Changeling. Roommate: Ali Amrani. Clubs: Engineering, Home Economics.'},
-      {type:'PC', name:'Dmitri Vinkov (Remote)', power:'Weather Control, Machine Animation, Clairvoyance', roleClass:'Quiet Kid / Normie', notes:'Breed Mutant, Russian. Roommate: James Kelly. Lists Jayden as a Friend on his own sheet.'},
-      {type:'NPC', name:'Sarah Byrne', power:'Carrier Wave Am(50)', roleClass:'Quiet Kid / Normie', notes:'Perceptive, laid-back. Secret: sent here for reasons beyond education, arranged by someone back home.'},
-      {type:'NPC', name:'Emma Scott', power:'Vibration Emission Gd(10)', roleClass:'Class Clown / Cool Kid', notes:'Jayden\'s Friend 2. Bonded over "I Think You Should Leave." Ambitious, driven. Secret: sent here for reasons beyond education.'},
-      {type:'NPC', name:'Sarah Ryan', power:'Communicate w/ Animals Ex(20)', roleClass:'Rebel / Loser', notes:'Shy, uncertain. Secret: parents don\'t fully know about her powers.'},
-      {type:'NPC', name:'Giulia Moretti', power:'Speech-Throwing Gd(10)', roleClass:'Jock / Cool Kid', notes:'Jayden\'s Friend 1. Made her custom dumbbells. Complicated. Secret: unreported power side effect.'},
-      {type:'NPC', name:'Chiara Ricci', power:'True Invulnerability Gd(10)', roleClass:'Jock / Normie', notes:'Curious, inventive. Secret: sent here for reasons beyond education.'},
-      {type:'NPC', name:'Fatma Nasser', power:'Force Field Ex(20)', roleClass:'Outcast-Pariah / Loser', notes:'Jayden\'s Clubmate (Combat Training). Ambitious, driven. Secret: knows something about a student/faculty member, hasn\'t shared it.'},
-      {type:'NPC', name:'Grace Wright', power:'Vibration Emission Gd(10)', roleClass:'Rebel / Normie', notes:'Shy, uncertain. Secret: unreported power side effect.'},
-      {type:'NPC', name:'Ines Petit', power:'Internal Limbo Ex(20)', roleClass:'Class Clown / Normie', notes:'Curious, inventive. Secret: unreported power side effect.'},
-      {type:'NPC', name:'Sophie Smith', power:'Hyper-Hearing Rm(30)', roleClass:'New Arrival / Normie', notes:'Complicated. Secret: parents don\'t fully know about her powers.'},
-      {type:'NPC', name:'Olivia Jones', power:'Hyper-Breath Rm(30)', roleClass:'Outsider / Normie', notes:'Overconfident. Secret: parents don\'t fully know; power manifested within the past year.'},
-      {type:'NPC', name:'Olivia Hunt (Gumshoe)', power:'Malleability Uc(45)', roleClass:'New Arrival / Cool Kid', notes:'Jayden\'s Friend 3, arrived week two. Makeup tutorial influencer - cross-following friendship. Irish.'},
-      {type:'NPC', name:'Sara Ali (Levitor)', power:'Levitation Ty(5)', roleClass:'Overachiever / Normie', notes:'Middle Eastern.'},
-      {type:'NPC', name:'Elias Karlsson', power:'Telescopic Vision Rm(30)', roleClass:'Class Clown / Normie', notes:'Active, dynamic. Secret: knows something about a student/faculty member.'},
-      {type:'NPC', name:'Ali Amrani', power:'Total Memory Gd(10)', roleClass:'Rich Kid / Cool Kid', notes:'Phineas\'s roommate. Overconfident. Secret: parents don\'t fully know.'},
-      {type:'NPC', name:'Aaron Kelly', power:'Sonic Generation Ex(20)', roleClass:'Caretaker / Loser', notes:'Perceptive, laid-back. Secret: unreported power side effect.'},
-      {type:'NPC', name:'Jack Fitzgerald', power:'Rm(30) - power name unconfirmed, possibly Aura', roleClass:'Caretaker / Normie', notes:'Perceptive, laid-back. Secret: knows something about a student/faculty member.'},
-      {type:'NPC', name:'Andrea Bruno', power:'Heat Generation Ex(20)', roleClass:'Overachiever / Loser', notes:'Jayden\'s Rival and roommate. Pretentious, argues constantly - resents Jayden coasting on his following while Andrea grinds for validation. Complicated. Secret: sent here for reasons beyond education.'},
-      {type:'NPC', name:'James Kelly', power:'Radiowave Control In(40)', roleClass:'Social Butterfly / Normie', notes:'Jayden\'s Crush. Dmitri\'s roommate. Working with Jayden on enhancement gear for Emma. Curious, inventive. Secret: feelings for someone that\'d be socially complicated if known.'},
-      {type:'NPC', name:'Gustave Babin', power:'Hyper Invention Rm(30) (+3 hidden - real ceiling higher)', roleClass:'Prodigy / Normie', notes:'Entitled, complicated prick. Secret: son of villains Vapor and Vector; powers understated to the school. Power manifested at puberty.'},
-      {type:'NPC', name:'Rayan Marrakchi (Now You See Me)', power:'Blending In(40)', roleClass:'Outcast / Loser', notes:'North African.'},
-      {type:'NPC', name:'Jade Durand', power:'Spirit Vampirism In(40)', roleClass:'Social Butterfly / Normie', notes:'Classmate but excluded from the roommate roll (unsafe for sustained close proximity while roommate sleeps). French, overconfident. Secret: has a contact outside the school she hasn\'t mentioned; power manifested within the past year.'}
+      {type:'PC', name:'Jayden Jameson (Beacon)', power:'Light Control, Molecular Creation', roleClass:'Caretaker / Cool Kid', notes:'Played by you. Seating: Jayden\'s table (with Giulia Moretti, Emma Scott, Olivia Hunt).'},
+      {type:'PC', name:'Phineas Wake (Half-Life)', power:'Shapeshifting, Body Resistance, Disintegration, Tracking, Hard Radiation Control', roleClass:'Prodigy / Normie', notes:'Changeling. Roommate: Ali Amrani. Clubs: Engineering, Home Economics. Seating: The quiet trio (with Dmitri Vinkov, James Kelly).'},
+      {type:'PC', name:'Dmitri Vinkov (Remote)', power:'Weather Control, Machine Animation, Clairvoyance', roleClass:'Quiet Kid / Normie', notes:'Breed Mutant, Russian. Roommate: James Kelly. Lists Jayden as a Friend on his own sheet. Seating: The quiet trio (with Phineas Wake, James Kelly).'},
+      {type:'NPC', name:'Sarah Byrne "The Titan"', power:'Carrier Wave Am(50)', roleClass:'Quiet Kid / Normie', notes:'Perceptive, laid-back. Secret: sent here for reasons beyond education, arranged by someone back home. Word of Mouth (Brawl 8, Blast 10, Smarts 10, Looks 9): massive raw physical and energy output, unflappably calm, plainspoken, dryly understates enormous feats. Parents are semi-retired legendary heroes living quietly on a farm - goes home every weekend without fail, looks tired by Monday. Cross Country, Robotics, Track & Field. Seating: Fig and Chiara\'s table.'},
+      {type:'NPC', name:'Emma Scott', power:'Vibration Emission Gd(10)', roleClass:'Class Clown / Cool Kid', notes:'Jayden\'s Friend 2. Bonded over "I Think You Should Leave." Word of Mouth (Brawl 1, Blast 1, Smarts 2, Looks 6): constant low-level body vibration keeps her wired and quick, sharp-witted, athletic, always has a camera or notepad on her. Tells people she\'s an "induced mutant" from a chemical accident, not born. Football club. Seating: Jayden\'s table.'},
+      {type:'NPC', name:'Sarah Ryan "Wildcall"', power:'Communicate w/ Animals Ex(20)', roleClass:'Rebel / Loser', notes:'Shy, uncertain. Secret: parents don\'t fully know about her powers. Word of Mouth (Brawl 1, Blast 1, Smarts 2, Looks 6): communicates with and directs animals, distracted, aloof, more comfortable around animals than people, not unkind, just checked out. Ordinary suburban parents never knew what to make of the strays she brought home. Hiking club. Seating: The losers\' table.'},
+      {type:'NPC', name:'Giulia Moretti', power:'Speech-Throwing Gd(10)', roleClass:'Jock / Cool Kid', notes:'Jayden\'s Friend 1. Made her custom dumbbells. Word of Mouth (Brawl 3, Blast 1, Smarts 7, Looks 7): voice-projection power, guarded, warm, protective "older sister" type, speaks low and measured. Orphaned young, fiercely protective of a chronically ill younger brother - everyone assumes something serious happened before Cork. Hiking club. Seating: Jayden\'s table.'},
+      {type:'NPC', name:'Chiara Ricci', power:'True Invulnerability Gd(10)', roleClass:'Jock / Normie', notes:'Curious, inventive. Secret: sent here for reasons beyond education. Word of Mouth (Brawl 2, Blast 1, Smarts 2, Looks 8): true invulnerability, warm and maternal with a quiet sharp anger about entitlement she won\'t fully explain. Mother is some kind of minor deity - a genuinely stable home life by Cork standards. Gaelic Football, Swimming. Seating: Fig and Chiara\'s table.'},
+      {type:'NPC', name:'Fatma Nasser "Vise"', power:'Force Field Ex(20)', roleClass:'Outcast-Pariah / Loser', notes:'Jayden\'s Clubmate (Combat Training). Word of Mouth (Brawl 4, Blast 4, Smarts 2, Looks 5): force fields paired with genuinely frightening hand-to-hand combat skill, guarded, hyper-alert, scans every room for exits. No known family; placed at Cork under a classified international arrangement. A persistent ugly rumor says she\'s killed someone - nobody who\'s sparred with her doubts it. Book Club, Chess. Seating: sits alone - nobody will sit near her.'},
+      {type:'NPC', name:'Grace Wright "Red Resonance"', power:'Vibration Emission Gd(10)', roleClass:'Rebel / Normie', notes:'Shy, uncertain. Secret: unreported power side effect. Word of Mouth (Brawl 1, Blast 3, Smarts 10, Looks 9): weak electricity generation, barely enough to power a vending machine. Cynical, protective of her art, rolls her eyes at destiny-and-glory hero types. Brilliant and strikingly good-looking; her parents are disappointed her power came out so unimpressive. Art Club, Track & Field. Seating: Jade\'s table.'},
+      {type:'NPC', name:'Ines Petit "Monarch of Ice"', power:'Internal Limbo Ex(20)', roleClass:'Class Clown / Normie', notes:'Curious, inventive. Secret: unreported power side effect. Word of Mouth (Brawl 2, Blast 1, Smarts 2, Looks 6): opens some kind of strange localized spatial rift, nobody\'s entirely sure what it is. Loud, theatrical, turns conversations into a stage play. Sheltered, tightly controlled upbringing, a bit naive. Mentored one-on-one by faculty member Illyana Rasputin. Gaelic Football. Seating: Jack\'s table.'},
+      {type:'NPC', name:'Sophie Smith "Sonar"', power:'Hyper-Hearing Rm(30)', roleClass:'New Arrival / Normie', notes:'Complicated. Secret: parents don\'t fully know about her powers. Word of Mouth (Brawl 1, Blast 1, Smarts 2, Looks 4): hyper-hearing, jumpy, easily overwhelmed by ordinary sound, but clearly loves gossip and stories more than the noise bothers her. Youngest of five mutant siblings; overprotective mother thinks she\'s at an ordinary boarding school. Cross Country, Drama Club. Seating: Jade\'s table.'},
+      {type:'NPC', name:'Olivia Jones "The Human Gale"', power:'Hyper-Breath Rm(30)', roleClass:'Outsider / Normie', notes:'Overconfident. Secret: parents don\'t fully know; power manifested within the past year. Word of Mouth (Brawl 8, Blast 7, Smarts 10, Looks 9): powerful directed wind breath, matched by physical strength/endurance beyond what training alone should give her. Loud, fearless, first to take any dare - though careful, in a way she\'d never admit, never to go all-out. Parents are competitive track coaches. Cross Country, Basketball, Track & Field. Seating: Floater - no fixed table, occasionally fills an open seat.'},
+      {type:'NPC', name:'Olivia Hunt (Gumshoe)', power:'Malleability Uc(45)', roleClass:'New Arrival / Cool Kid', notes:'Jayden\'s Friend 3, arrived week two. Makeup tutorial influencer - cross-following friendship. Word of Mouth (Brawl 3, Blast 1, Smarts 2, Looks 5): near-total body malleability, can stretch/flatten/bounce off falls without a scratch. Curious, a little lazy, unmistakable detective instincts, constantly slouching. Working-class family from Limerick; already ran her own amateur investigations before Cork, proudly recounts helping crack a real theft ring back home. Seating: Jayden\'s table.'},
+      {type:'NPC', name:'Sara Ali (Levitor)', power:'Levitation Ty(5)', roleClass:'Overachiever / Normie', notes:'Middle Eastern. Word of Mouth (Brawl 2, Blast 1, Smarts 2, Looks 5): weak levitation she insists, loudly, is basically useless. Perpetually stressed, competitive, running on anxious energy, always checking the time. Strict traditional engineering family, known to get berated by her parents on calls home. No clubs. Seating: Ali\'s table.'},
+      {type:'NPC', name:'Elias Karlsson "The Watcher"', power:'Telescopic Vision Rm(30)', roleClass:'Class Clown / Normie', notes:'Active, dynamic. Secret: knows something about a student/faculty member. Word of Mouth (Brawl 1, Blast 5, Smarts 4, Looks 4): telescopic cybernetic vision, notably clumsy since getting his new eyes. Friendly, hyper-alert, uses barracks humor as armor. Orphaned in a military accident, raised in state care, already signed an enlistment contract for after graduation. Superheroics Club, Drama Club. Seating: Jack\'s table.'},
+      {type:'NPC', name:'Ali Amrani', power:'Total Memory Gd(10)', roleClass:'Rich Kid / Cool Kid', notes:'Phineas\'s roommate. Word of Mouth (Brawl 1, Blast 1, Smarts 4, Looks 5): perfect ("Total") memory, cold, arrogant, treats every relationship as a negotiation - genuinely doesn\'t get why anyone gives something away for free. Old money, real wealth, wears it like other people wear charm. Drama Club, Student Council. Seating: Ali\'s table.'},
+      {type:'NPC', name:'Aaron Kelly "Undertone"', power:'Sonic Generation Ex(20)', roleClass:'Caretaker / Loser', notes:'Perceptive, laid-back. Secret: unreported power side effect. Word of Mouth (Brawl 3, Blast 5, Smarts 7, Looks 4): sonic generation powered by an experimental suit rather than biology. Patient, supportive, a natural peacekeeper who hates confrontation. Working-class Dublin parents are currently in prison over how the suit was obtained; he visits them every month without fail. Drama Club. Seating: The losers\' table.'},
+      {type:'NPC', name:'Jack Fitzgerald "Iron Scale"', power:'Martial energy aura + reptilian-toughened skin, Rm(30)', roleClass:'Caretaker / Normie', notes:'Perceptive, laid-back. Secret: knows something about a student/faculty member. Word of Mouth (Brawl 5, Blast 1, Smarts 2, Looks 6): patient, humble, quietly disciplined - clearly training for something specific, though he doesn\'t talk about what. Half from the hidden city of Kun Lun; very close with his adventurer mother. Book Club, Chess, Model UN. Seating: Jack\'s table.'},
+      {type:'NPC', name:'Andrea Bruno "The Boiler"', power:'Heat Generation Ex(20)', roleClass:'Overachiever / Loser', notes:'Jayden\'s Rival and roommate. Pretentious, argues constantly - resents Jayden coasting on his following while Andrea grinds for validation. Word of Mouth (Brawl 2, Blast 5, Smarts 2, Looks 5): heat generation, publicly explained as a geothermal accident on Mt. Etna. Intense, competitive, genuinely frustrated with his own grades - wants to just be a normal kid who\'s good at normal things. Raised by a loving, traditional stonemason couple. Swimming club. Seating: The losers\' table.'},
+      {type:'NPC', name:'James Kelly "Wavelength"', power:'Radiowave Control In(40)', roleClass:'Social Butterfly / Normie', notes:'Jayden\'s Crush. Dmitri\'s roommate. Working with Jayden on enhancement gear for Emma. Word of Mouth (Brawl 1, Blast 4, Smarts 4, Looks 2): senses and manipulates radio waves. Anxious, eager to please, talks fast and trails off when things get emotional. Younger brother of a convicted cyber-thief; parents are still around and clearly terrified he\'ll go the same way. Marching Band, Model UN. Seating: The quiet trio.'},
+      {type:'NPC', name:'Gustave Babin "Catalyst"', power:'Hyper Invention Rm(30) (+3 hidden - real ceiling higher)', roleClass:'Prodigy / Normie', notes:'Entitled, complicated prick. Secret: son of villains Vapor and Vector; powers understated to the school. Power manifested at puberty. Word of Mouth (Brawl 1, Blast 1, Smarts 10, Looks 7): genuinely gifted young inventor, quick to condescend, corrects people\'s terminology, rarely finishes a sentence without a backhanded compliment. Comes from money and connections nobody\'s quite placed. Marching Band, Robotics. Seating: Ali\'s table.'},
+      {type:'NPC', name:'Rayan Marrakchi (Now You See Me)', power:'Blending In(40)', roleClass:'Outcast / Loser', notes:'North African. Word of Mouth (Brawl 5, Blast 3, Smarts 2, Looks 0): active camouflage/blending on top of an unusually large, powerful frame. Quiet, watchful, notices everything, doesn\'t always say what he thinks. Those who\'ve seen his face say it\'s disgusting, so he usually wears a ski mask. Raised by mercenaries, believed. A persistent ugly rumor says he uses his invisibility to spy on people - he\'s stopped denying it. Seating: The losers\' table.'},
+      {type:'NPC', name:'Jade Durand "Belladonna"', power:'Spirit Vampirism In(40)', roleClass:'Social Butterfly / Normie', notes:'Classmate but excluded from the roommate roll (unsafe for sustained close proximity while roommate sleeps). Word of Mouth (Brawl 1, Blast 1, Smarts 2, Looks 8): a draining touch dangerous enough that she avoids almost all physical contact. Magnetic and charming in a crowd, but visibly stiff and hands-in-pockets about closeness. Grew up in a French orphanage; her mother only recently came back into her life. Cross Country, Swimming, Track & Field. Seating: Jade\'s table (her own).'},
+      {type:'NPC', name:'Figerova Sablinova', power:'Unknown', roleClass:'Unknown', notes:'New name from the cafeteria seating chart - no Word of Mouth entry yet. Seating: Fig and Chiara\'s table (with Chiara Ricci, Sarah Byrne, Liam O\'Morain).'},
+      {type:'NPC', name:'Liam O\'Morain', power:'Unknown', roleClass:'Unknown', notes:'New name from the cafeteria seating chart - no Word of Mouth entry yet. Seating: Fig and Chiara\'s table (with Figerova Sablinova, Chiara Ricci, Sarah Byrne).'}
     ],
     currentDate: 'August 3 (Orientation)',
     calendar: [
@@ -498,8 +508,8 @@
     data.stats.forEach((s,i)=>{
       const tr = document.createElement('tr');
       tr.innerHTML = `<td style="padding:4px 0;">${s.name}</td>
-        <td><input data-stat="${i}" data-field="base" value="${s.base}" style="width:70px;"></td>
-        <td><input data-stat="${i}" data-field="current" value="${s.current}" style="width:70px;"></td>`;
+        <td><input data-stat="${i}" data-field="base" value="${s.base}" style="width:70px; color:#ffffff;"></td>
+        <td><input data-stat="${i}" data-field="current" value="${s.current}" style="width:70px; color:#ffffff;"></td>`;
       statBody.appendChild(tr);
     });
     document.getElementById('healthCur').value = data.healthCur;
@@ -507,8 +517,10 @@
     document.getElementById('karma').value = data.karma;
     document.getElementById('gpa').value = data.gpa;
     document.getElementById('ss').value = data.ss;
+    document.getElementById('tally').value = data.tally;
     document.getElementById('resourcesShow').textContent = data.resources;
-    document.getElementById('popularity').value = data.popularity;
+    document.getElementById('popularityBeacon').value = data.popularityBeacon;
+    document.getElementById('popularityJayJay').value = data.popularityJayJay;
     document.getElementById('ssBadge').textContent = data.socialClass;
 
     const attacksTable = document.getElementById('attacksTable');
@@ -748,7 +760,9 @@
     data.karma = Number(document.getElementById('karma').value) || 0;
     data.gpa = Number(document.getElementById('gpa').value) || 0;
     data.ss = Number(document.getElementById('ss').value) || 0;
-    data.popularity = Number(document.getElementById('popularity').value) || 0;
+    data.tally = Number(document.getElementById('tally').value) || 0;
+    data.popularityBeacon = Number(document.getElementById('popularityBeacon').value) || 0;
+    data.popularityJayJay = Number(document.getElementById('popularityJayJay').value) || 0;
 
     document.querySelectorAll('[data-power]').forEach(el=>{
       const field = el.dataset.field;
@@ -1002,6 +1016,29 @@
     } catch(e) {
       document.getElementById('saveStatus').textContent = 'Export failed';
     }
+  });
+
+  let resetArmed = false;
+  let resetArmTimeout = null;
+  const resetBtn = document.getElementById('resetDataBtn');
+  const resetBtnDefaultText = resetBtn.textContent;
+  resetBtn.addEventListener('click', ()=>{
+    if (!resetArmed) {
+      resetArmed = true;
+      resetBtn.textContent = 'Click again to confirm (discards saved changes)';
+      resetArmTimeout = setTimeout(()=>{
+        resetArmed = false;
+        resetBtn.textContent = resetBtnDefaultText;
+      }, 6000);
+      return;
+    }
+    clearTimeout(resetArmTimeout);
+    resetArmed = false;
+    resetBtn.textContent = resetBtnDefaultText;
+    data = JSON.parse(JSON.stringify(defaultData));
+    render();
+    document.getElementById('saveStatus').textContent = 'Reset to latest version — click Save changes to keep it';
+    setTimeout(()=>{ document.getElementById('saveStatus').textContent=''; }, 5000);
   });
 
   document.getElementById('importDataBtn').addEventListener('click', ()=>{
